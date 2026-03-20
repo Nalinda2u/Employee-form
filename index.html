@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Information Form</title>
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+</head>
+<body>
+  <div class="form-container">
+    <form id="combinedForm" novalidate>
+      <h2 class="main-title">Employee Information Form</h2>
+      <div class="title-line"></div>
+
+      <div class="section-title">1. Personal Details</div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="surname" class="form-label">Surname</label>
+          <input type="text" id="surname" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="givenNames" class="form-label">Given Names</label>
+          <input type="text" id="givenNames" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-4">
+        <div class="field">
+          <label for="dateOfBirth" class="form-label">Date of Birth</label>
+          <input type="date" id="dateOfBirth" class="form-control" />
+        </div>
+        <div class="field">
+          <label for="age" class="form-label">Age</label>
+          <input type="number" id="age" class="form-control" min="0" max="120" />
+        </div>
+        <div class="field">
+          <label for="sex" class="form-label">Sex</label>
+          <input type="text" id="sex" class="form-control" maxlength="20" />
+        </div>
+        <div class="field">
+          <label for="nationality" class="form-label">Nationality</label>
+          <input type="text" id="nationality" class="form-control" maxlength="60" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="currentResidentialAddress" class="form-label">Current Residential Address</label>
+          <textarea id="currentResidentialAddress" class="form-control" rows="2" maxlength="250"></textarea>
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="contactMobileNo" class="form-label">Contact Mobile No</label>
+          <input type="tel" id="contactMobileNo" class="form-control" maxlength="20" required />
+        </div>
+        <div class="field">
+          <label for="contactHomeNo" class="form-label">Contact Home No</label>
+          <input type="tel" id="contactHomeNo" class="form-control" maxlength="20" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="contactEmailAddress" class="form-label">Contact Email Address</label>
+          <input type="email" id="contactEmailAddress" class="form-control" maxlength="120" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="languagesSpoken" class="form-label">Language(s) Spoken</label>
+          <input type="text" id="languagesSpoken" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-3">
+        <div class="field">
+          <label for="driversLicenceNo" class="form-label">Drivers Licence No</label>
+          <input type="text" id="driversLicenceNo" class="form-control" maxlength="50" />
+        </div>
+        <div class="field">
+          <label for="stateOfIssue" class="form-label">State of Issue</label>
+          <input type="text" id="stateOfIssue" class="form-control" maxlength="50" />
+        </div>
+        <div class="field">
+          <label for="licenceExpiry" class="form-label">Exp</label>
+          <input type="date" id="licenceExpiry" class="form-control" />
+        </div>
+      </div>
+
+      <div class="section-title">2. TFN Details</div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="taxFileDeclarationNumber" class="form-label">Tax File Declaration Number</label>
+          <input type="text" id="taxFileDeclarationNumber" class="form-control" maxlength="50" />
+        </div>
+      </div>
+
+      <div class="section-title">3. Bank Account Details</div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="bankAccountName" class="form-label">Name</label>
+          <input type="text" id="bankAccountName" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="bankName" class="form-label">Bank</label>
+          <input type="text" id="bankName" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="bankBranch" class="form-label">Branch</label>
+          <input type="text" id="bankBranch" class="form-control" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="bsbNo" class="form-label">BSB No</label>
+          <input type="text" id="bsbNo" class="form-control" maxlength="20" />
+        </div>
+        <div class="field">
+          <label for="accountNo" class="form-label">Account No</label>
+          <input type="text" id="accountNo" class="form-control" maxlength="30" />
+        </div>
+      </div>
+
+      <div class="section-title">4. Superannuation</div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="superFund" class="form-label">Fund</label>
+          <input type="text" id="superFund" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="membershipName" class="form-label">Membership Name</label>
+          <input type="text" id="membershipName" class="form-control" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="membershipNumber" class="form-label">Membership Number</label>
+          <input type="text" id="membershipNumber" class="form-control" maxlength="50" />
+        </div>
+      </div>
+
+      <div class="section-title">5. Medical</div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="medicalConditions" class="form-label">Do you have/suffer from any medical conditions?</label>
+          <textarea id="medicalConditions" class="form-control" rows="2" maxlength="300"></textarea>
+        </div>
+      </div>
+
+      <div class="section-title">6. Next of Kin</div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="nextOfKinName" class="form-label">Name</label>
+          <input type="text" id="nextOfKinName" class="form-control" maxlength="120" />
+        </div>
+        <div class="field">
+          <label for="nextOfKinPhoneNumbers" class="form-label">Phone Number(s)</label>
+          <input type="text" id="nextOfKinPhoneNumbers" class="form-control" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-1">
+        <div class="field field-full">
+          <label for="relationshipToYou" class="form-label">Relation to you</label>
+          <input type="text" id="relationshipToYou" class="form-control" maxlength="100" />
+        </div>
+      </div>
+
+      <h2 class="sub-title">Working Legally in Australia</h2>
+
+      <div class="section-title">7. Personal Details</div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="step2Surname" class="form-label">Surname</label>
+          <input type="text" id="step2Surname" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="step2GivenNames" class="form-label">Given Names</label>
+          <input type="text" id="step2GivenNames" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-4">
+        <div class="field">
+          <label for="step2DateOfBirth" class="form-label">Date of Birth</label>
+          <input type="date" id="step2DateOfBirth" class="form-control" />
+        </div>
+        <div class="field">
+          <label for="step2Age" class="form-label">Age</label>
+          <input type="number" id="step2Age" class="form-control" />
+        </div>
+        <div class="field">
+          <label for="step2Sex" class="form-label">Sex</label>
+          <input type="text" id="step2Sex" class="form-control" />
+        </div>
+        <div class="field">
+          <label for="step2Nationality" class="form-label">Nationality</label>
+          <input type="text" id="step2Nationality" class="form-control" />
+        </div>
+      </div>
+
+      <div class="section-title">8. Working Rights</div>
+
+      <div class="question-row">
+        <div class="question-layout">
+          <div>
+            <div class="question-text">
+              <span class="question-number">1.</span>
+              Are you a <u>Permanent Resident</u> or <u>Citizen</u> of Australia/New Zealand?
+            </div>
+            <div class="sub-note">
+              If you answered YES to number 1, go directly to number 6. If you answered NO to number 1, proceed to number 2.
+            </div>
+          </div>
+          <div class="yes-no-group">
+            <label><input type="radio" name="residentCitizen" value="YES" /> YES</label>
+            <label><input type="radio" name="residentCitizen" value="NO" /> NO</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-row">
+        <div class="question-layout">
+          <div class="question-text">
+            <span class="question-number">2.</span>
+            Are you allowed to work legally in Australia?
+          </div>
+          <div class="yes-no-group">
+            <label><input type="radio" name="allowedToWork" value="YES" /> YES</label>
+            <label><input type="radio" name="allowedToWork" value="NO" /> NO</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-row">
+        <div class="question-layout">
+          <div class="question-text">
+            <span class="question-number">3.</span>
+            Are you restricted to the number of hours you are entitled to work in Australia?
+          </div>
+          <div class="yes-no-group">
+            <label><input type="radio" name="restrictedHours" value="YES" /> YES</label>
+            <label><input type="radio" name="restrictedHours" value="NO" /> NO</label>
+          </div>
+        </div>
+        <div class="inline-field">
+          <label for="restrictionDetails">If yes, what is the restriction</label>
+          <input type="text" id="restrictionDetails" class="form-control" maxlength="250" />
+        </div>
+      </div>
+
+      <div class="question-row">
+        <div class="inline-field">
+          <span class="question-number">4.</span>
+          <label for="currentVisa">What Visa are you currently on;</label>
+          <input type="text" id="currentVisa" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="visaClass" class="form-label">Visa Class</label>
+          <input type="text" id="visaClass" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="visaSubClass" class="form-label">Visa Sub Class</label>
+          <input type="text" id="visaSubClass" class="form-control" maxlength="100" />
+        </div>
+      </div>
+
+      <div class="question-row">
+        <div class="inline-field">
+          <span class="question-number">5.</span>
+          <label for="visaExpiryDate">On what date is your VISA mentioned above due to expire:</label>
+          <input type="date" id="visaExpiryDate" class="form-control" style="max-width: 220px;" />
+        </div>
+      </div>
+
+      <div class="section-title">9. Declaration</div>
+
+      <div class="question-row" style="border-bottom: none; padding-bottom: 4px;">
+        <div class="inline-field">
+          <span class="question-number">6.</span>
+          <label for="declarationName">I,</label>
+          <input type="text" id="declarationName" class="form-control" maxlength="150" />
+        </div>
+        <div class="declaration-text">
+          hereby acknowledge and declare that the above information I have given is true and accurate.
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label for="declarationSurname" class="form-label">Surname</label>
+          <input type="text" id="declarationSurname" class="form-control" maxlength="100" />
+        </div>
+        <div class="field">
+          <label for="declarationGivenNames" class="form-label">Given Name(s)</label>
+          <input type="text" id="declarationGivenNames" class="form-control" maxlength="150" />
+        </div>
+      </div>
+
+      <div class="row-grid grid-2">
+        <div class="field">
+          <label class="form-label">Signature</label>
+          <div class="signature-wrapper">
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+          </div>
+          <div class="signature-actions">
+            <button type="button" class="clear-btn" id="clearSignatureBtn">Clear Signature</button>
+          </div>
+          <div class="signature-note">Please sign inside the box.</div>
+          <input type="hidden" id="signatureData" />
+        </div>
+
+        <div class="field">
+          <label for="declarationDate" class="form-label">Date</label>
+          <input type="date" id="declarationDate" class="form-control" />
+        </div>
+      </div>
+
+      <div class="consent-row">
+        <input type="checkbox" id="finalConsent" />
+        <label for="finalConsent">
+          I confirm that the information provided is correct.
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+
+      <div id="messageBox" tabindex="-1"></div>
+      <div class="loading" id="loader">Submitting your details, please wait...</div>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    const form = document.getElementById('combinedForm');
+    const messageBox = document.getElementById('messageBox');
+    const loader = document.getElementById('loader');
+    const submitBtn = document.getElementById('submitBtn');
+    const finalConsent = document.getElementById('finalConsent');
+
+    const canvas = document.getElementById('signaturePad');
+    const clearSignatureBtn = document.getElementById('clearSignatureBtn');
+    const signatureDataInput = document.getElementById('signatureData');
+
+    let signaturePad;
+    let isSubmittedSuccessfully = false;
+
+    function initSignaturePad() {
+      if (signaturePad) return;
+
+      signaturePad = new SignaturePad(canvas, {
+        minWidth: 0.8,
+        maxWidth: 2.2
+      });
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+    }
+
+    function resizeCanvas() {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.getContext('2d').scale(ratio, ratio);
+
+      if (signaturePad && !isSubmittedSuccessfully) {
+        signaturePad.clear();
+      }
+    }
+
+    initSignaturePad();
+
+    clearSignatureBtn.addEventListener('click', () => {
+      if (isSubmittedSuccessfully) return;
+      if (signaturePad) {
+        signaturePad.clear();
+        signatureDataInput.value = '';
+      }
+    });
+
+    function showMessage(type, text, link = null) {
+      let html = `<div class="alert alert-${type}" role="alert">${text}</div>`;
+      if (link) {
+        html = `
+          <div class="alert alert-${type}" role="alert">
+            <div>${text}</div>
+            <div style="margin-top: 8px;">
+              <a href="${link}" target="_blank" rel="noopener noreferrer" class="pdf-link">Open PDF</a> 
+            </div>
+          </div>
+        `;
+      }
+      messageBox.innerHTML = html;
+    }
+
+    function getRadioValue(name) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? selected.value : '';
+    }
+
+    function freezeAllFieldsExceptNext() {
+      const allInputs = form.querySelectorAll('input, textarea, select, button');
+
+      allInputs.forEach((el) => {
+        if (el === submitBtn) return;
+
+        if (el.type === 'radio' || el.type === 'checkbox' || el.tagName === 'SELECT' || el.tagName === 'BUTTON') {
+          el.disabled = true;
+        } else {
+          el.readOnly = true;
+          el.disabled = true;
+        }
+      });
+
+      if (clearSignatureBtn) {
+        clearSignatureBtn.disabled = true;
+      }
+
+      if (canvas) {
+        canvas.style.pointerEvents = 'none';
+        canvas.style.opacity = '0.75';
+      }
+    }
+
+    function focusSuccessArea() {
+      requestAnimationFrame(() => {
+        submitBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        setTimeout(() => {
+          messageBox.focus({ preventScroll: true });
+          submitBtn.focus({ preventScroll: true });
+        }, 350);
+      });
+    }
+
+    function storeVerificationContext() {
+      sessionStorage.setItem('contact_mobile_no', document.getElementById('contactMobileNo').value.trim());
+    }
+
+    submitBtn.addEventListener('click', () => {
+      if (isSubmittedSuccessfully) {
+        storeVerificationContext();
+        window.location.href = 'verification.html';
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageBox.innerHTML = '';
+
+      if (isSubmittedSuccessfully) return;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      if (!finalConsent.checked) {
+        showMessage('warning', 'Please confirm that the information provided is correct.');
+        return;
+      }
+      if (!signaturePad || signaturePad.isEmpty()) {
+        showMessage('warning', 'Please provide your signature before submitting the form.');
+        return;
+      }
+
+      signatureDataInput.value = signaturePad.toDataURL('image/png');
+
+      const payload = {
+        form_type: 'employee_information',
+        surname: document.getElementById('surname').value.trim(),
+        given_names: document.getElementById('givenNames').value.trim(),
+        date_of_birth: document.getElementById('dateOfBirth').value,
+        age: document.getElementById('age').value.trim(),
+        sex: document.getElementById('sex').value.trim(),
+        nationality: document.getElementById('nationality').value.trim(),
+        current_residential_address: document.getElementById('currentResidentialAddress').value.trim(),
+        contact_mobile_no: document.getElementById('contactMobileNo').value.trim(),
+        contact_home_no: document.getElementById('contactHomeNo').value.trim(),
+        contact_email_address: document.getElementById('contactEmailAddress').value.trim(),
+        languages_spoken: document.getElementById('languagesSpoken').value.trim(),
+        drivers_licence_no: document.getElementById('driversLicenceNo').value.trim(),
+        state_of_issue: document.getElementById('stateOfIssue').value.trim(),
+        licence_expiry: document.getElementById('licenceExpiry').value,
+        tax_file_declaration_number: document.getElementById('taxFileDeclarationNumber').value.trim(),
+        bank_account_name: document.getElementById('bankAccountName').value.trim(),
+        bank_name: document.getElementById('bankName').value.trim(),
+        bank_branch: document.getElementById('bankBranch').value.trim(),
+        bsb_no: document.getElementById('bsbNo').value.trim(),
+        account_no: document.getElementById('accountNo').value.trim(),
+        super_fund: document.getElementById('superFund').value.trim(),
+        membership_name: document.getElementById('membershipName').value.trim(),
+        membership_number: document.getElementById('membershipNumber').value.trim(),
+        medical_conditions: document.getElementById('medicalConditions').value.trim(),
+        next_of_kin_name: document.getElementById('nextOfKinName').value.trim(),
+        next_of_kin_phone_numbers: document.getElementById('nextOfKinPhoneNumbers').value.trim(),
+        relationship_to_you: document.getElementById('relationshipToYou').value.trim(),
+        step2_surname: document.getElementById('step2Surname').value.trim(),
+        step2_given_names: document.getElementById('step2GivenNames').value.trim(),
+        step2_date_of_birth: document.getElementById('step2DateOfBirth').value,
+        step2_age: document.getElementById('step2Age').value.trim(),
+        step2_sex: document.getElementById('step2Sex').value.trim(),
+        step2_nationality: document.getElementById('step2Nationality').value.trim(),
+        permanent_resident_or_citizen: getRadioValue('residentCitizen'),
+        allowed_to_work_legally: getRadioValue('allowedToWork'),
+        restricted_work_hours: getRadioValue('restrictedHours'),
+        restriction_details: document.getElementById('restrictionDetails').value.trim(),
+        current_visa: document.getElementById('currentVisa').value.trim(),
+        visa_class: document.getElementById('visaClass').value.trim(),
+        visa_sub_class: document.getElementById('visaSubClass').value.trim(),
+        visa_expiry_date: document.getElementById('visaExpiryDate').value,
+        declaration_name: document.getElementById('declarationName').value.trim(),
+        declaration_surname: document.getElementById('declarationSurname').value.trim(),
+        declaration_given_names: document.getElementById('declarationGivenNames').value.trim(),
+        declaration_date: document.getElementById('declarationDate').value,
+        signature: signatureDataInput.value,
+        submitted_at: new Date().toISOString()
+      };
+
+      loader.style.display = 'block';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const response = await fetch(CONFIG.WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const rawText = await response.text();
+        let result = {};
+        try { result = rawText ? JSON.parse(rawText) : {}; } catch { result = {}; }
+
+        if (!response.ok) throw new Error(result.message || 'Something went wrong while submitting.');
+
+        if (result.success) {
+          storeVerificationContext();
+          showMessage('success', 'Your details have been submitted successfully. Please click NEXT to proceed.');
+          isSubmittedSuccessfully = true;
+          freezeAllFieldsExceptNext();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'NEXT';
+          focusSuccessArea();
+        } else {
+          showMessage('warning', result.message || 'Unable to process your request.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit';
+        }
+      } catch (error) {
+        showMessage('danger', error.message || 'Submission failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      } finally {
+        loader.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
