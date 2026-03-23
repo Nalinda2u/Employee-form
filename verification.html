@@ -224,6 +224,8 @@
     const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
 
     const savedMobileNo = sessionStorage.getItem('contact_mobile_no') || '';
+    const savedEmailAddress = sessionStorage.getItem('contact_email_address') || '';
+
     let isUploading = false;
 
     function showStatus(type, html) {
@@ -369,6 +371,7 @@
       const payload = {
         form_type: 'verification',
         contact_mobile_no: savedMobileNo,
+        contact_email_address: savedEmailAddress,
         submitted_at: new Date().toISOString(),
         taxFileData: await toBase64(taxFile),
         taxFileName: taxFile.name,
