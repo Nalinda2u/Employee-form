@@ -444,15 +444,23 @@
         }
 
         if (result && typeof result === 'object') {
-          if (result.success === true) {
-            showStatus(
-              'success',
-              '<strong>Success!</strong> All documents have been uploaded successfully. Thank you.'
-            );
-            finalUploadBtn.textContent = 'SUBMISSION COMPLETED';
-            finalUploadBtn.disabled = true;
-            return;
-          }
+
+         if (result.success === true) {
+  showStatus(
+    'success',
+    '<strong>Success!</strong> All documents have been uploaded successfully. Thank you.'
+  );
+
+  finalUploadBtn.textContent = 'SUBMISSION COMPLETED';
+  finalUploadBtn.disabled = true;
+
+  // 🔁 Auto redirect after 10 seconds
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 10000);
+
+  return;
+}
 
           if (typeof result.success !== 'undefined' && result.success !== true) {
             throw new Error(result.message || 'Upload failed. Please try again.');
