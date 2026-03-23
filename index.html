@@ -427,6 +427,7 @@
 
     function storeVerificationContext() {
       sessionStorage.setItem('contact_mobile_no', document.getElementById('contactMobileNo').value.trim());
+      sessionStorage.setItem('contact_email_address', document.getElementById('contactEmailAddress').value.trim());
     }
 
     submitBtn.addEventListener('click', () => {
