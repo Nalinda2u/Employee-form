@@ -521,12 +521,17 @@
 
         if (result.success) {
           storeVerificationContext();
-          showMessage('success', 'Your details have been submitted successfully. Please click NEXT to proceed.');
+          showMessage('success', '"Your details have been submitted successfully. Action Required: Please click the button below to upload your identity documents to complete the application."');
           isSubmittedSuccessfully = true;
           freezeAllFieldsExceptNext();
           submitBtn.disabled = false;
-          submitBtn.textContent = 'NEXT';
+          submitBtn.textContent = 'NEXT - GO TO DOCUMENT SUBMISSION';
           focusSuccessArea();
+// 🔁 Auto redirect after 5 seconds
+	setTimeout(() => {
+ 	window.location.href = 'verification.html';
+	}, 5000);
+
         } else {
           showMessage('warning', result.message || 'Unable to process your request.');
           submitBtn.disabled = false;
