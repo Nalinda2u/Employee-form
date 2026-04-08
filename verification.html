@@ -45,6 +45,11 @@
       box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.12);
     }
 
+    .file-input[readonly] {
+      background: #f5f5f5;
+      cursor: not-allowed;
+    }
+
     .helper-text {
       font-size: 12px;
       color: #666;
@@ -136,6 +141,23 @@
       <h2 class="main-title">Required Documents Submission</h2>
       <div class="title-line"></div>
 
+      <div class="section-title">Customer Verification</div>
+      <div class="upload-box">
+        <label class="upload-label" for="contactMobileNoInput">
+          Contact Mobile No *
+        </label>
+        <input
+          type="tel"
+          id="contactMobileNoInput"
+          class="file-input"
+          maxlength="20"
+          placeholder="Enter the same phone number used in Step 1"
+        />
+        <div class="helper-text" id="mobileHelperText">
+          Please enter the same phone number you used when submitting the Employee Information Form.
+        </div>
+      </div>
+
       <div class="section-title">1. Tax File Number Declaration</div>
       <div class="upload-box">
         <label class="upload-label" for="taxFile">
@@ -208,6 +230,8 @@
     const loader = document.getElementById('loader');
     const uploadingNote = document.getElementById('uploadingNote');
 
+    const contactMobileNoInput = document.getElementById('contactMobileNoInput');
+    const mobileHelperText = document.getElementById('mobileHelperText');
     const taxFileInput = document.getElementById('taxFile');
     const idProofInput = document.getElementById('idProof');
     const policeReportInput = document.getElementById('policeReport');
@@ -225,10 +249,32 @@
     ];
     const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
 
-    const savedMobileNo = sessionStorage.getItem('contact_mobile_no') || '';
+    const urlParams = new URLSearchParams(window.location.search);
+    const mobileFromUrl = (urlParams.get('mobile') || '').trim();
+    const mobileFromSession = (sessionStorage.getItem('contact_mobile_no') || '').trim();
     const savedEmailAddress = sessionStorage.getItem('contact_email_address') || '';
 
+    if (mobileFromUrl) {
+      contactMobileNoInput.value = mobileFromUrl;
+      contactMobileNoInput.readOnly = false;
+      mobileHelperText.style.display = 'block';
+    } else if (mobileFromSession) {
+      contactMobileNoInput.value = mobileFromSession;
+      contactMobileNoInput.readOnly = true;
+      contactMobileNoInput.setAttribute('aria-readonly', 'true');
+      contactMobileNoInput.title = 'This phone number was auto-filled from your previous submission and cannot be changed here.';
+      mobileHelperText.style.display = 'none';
+    } else {
+      contactMobileNoInput.value = '';
+      contactMobileNoInput.readOnly = false;
+      mobileHelperText.style.display = 'block';
+    }
+
     let isUploading = false;
+
+    function getResolvedMobileNo() {
+      return (contactMobileNoInput.value || '').trim();
+    }
 
     function showStatus(type, html) {
       statusAlert.className = `alert alert-${type}`;
@@ -369,10 +415,11 @@
       const policeFile = policeReportInput.files[0];
       const visaFile = visaProofInput.files[0];
       const extraFiles = Array.from(additionalDocsInput.files || []);
+      const resolvedMobileNo = getResolvedMobileNo();
 
       const payload = {
         form_type: 'verification',
-        contact_mobile_no: savedMobileNo,
+        contact_mobile_no: resolvedMobileNo,
         contact_email_address: savedEmailAddress,
         submitted_at: new Date().toISOString(),
         taxFileData: await toBase64(taxFile),
@@ -421,8 +468,10 @@
           throw new Error('Webhook configuration is missing. Please check config.js.');
         }
 
-        if (!savedMobileNo) {
-          throw new Error('Contact Mobile No not found. Please complete Step 1 first.');
+        const resolvedMobileNo = getResolvedMobileNo();
+
+        if (!resolvedMobileNo) {
+          throw new Error('Please enter your Contact Mobile No before uploading documents.');
         }
 
         validateRequiredFiles();
@@ -450,22 +499,21 @@
 
         if (result && typeof result === 'object') {
 
-         if (result.success === true) {
-  showStatus(
-    'success',
-    '<strong>Success!</strong> All documents have been uploaded successfully. Thank you.'
-  );
+          if (result.success === true) {
+            showStatus(
+              'success',
+              '<strong>Success!</strong> All documents have been uploaded successfully. Thank you.'
+            );
 
-  finalUploadBtn.textContent = 'SUBMISSION COMPLETED';
-  finalUploadBtn.disabled = true;
+            finalUploadBtn.textContent = 'SUBMISSION COMPLETED';
+            finalUploadBtn.disabled = true;
 
-  // 🔁 Auto redirect after 5 seconds
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 5000);
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 5000);
 
-  return;
-}
+            return;
+          }
 
           if (typeof result.success !== 'undefined' && result.success !== true) {
             throw new Error(result.message || 'Upload failed. Please try again.');
