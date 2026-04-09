@@ -3,11 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Information Form</title>
-  
-  <link rel="stylesheet" href="style.css">
-  
+  <title>Employee Information & Document Submission</title>
+
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+  <style>
+    .upload-box {
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 18px;
+      background: #fff;
+      margin-bottom: 18px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .upload-box:hover {
+      border-color: #2f6fed;
+      box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.06);
+    }
+
+    .upload-label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .file-input:focus {
+      outline: none;
+      border-color: #2f6fed;
+      box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.12);
+    }
+
+    .helper-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    .selected-file {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #2d2d2d;
+      word-break: break-word;
+    }
+
+    .selected-file strong {
+      font-weight: 700;
+    }
+
+    .btn-download {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      background: #1f6fff;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-download:hover {
+      color: #fff;
+      text-decoration: none;
+      background: #165de0;
+    }
+
+    .section-gap {
+      margin-top: 30px;
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 18px;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffe69c;
+    }
+
+    .alert-danger {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 576px) {
+      .upload-box {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="form-container">
@@ -312,10 +434,72 @@
         </label>
       </div>
 
-      <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+      <div class="section-gap"></div>
+      
+      <div class="title-line"></div>
+      <h2 class="main-title">Required Documents Submission</h2>
+      <div class="small-note">
+        Please upload all required verification documents below before submitting the full application.
+      </div>
+
+      <div class="section-title">9. Tax File Number Declaration Upload</div>
+      <div class="upload-box">
+        <label class="upload-label" for="taxFile">
+          Download the TFN form, fill it, and upload here: *
+        </label>
+        <a
+          href="TFN_declaration_form_N3092.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-download"
+        >
+           📥 Download & Fill Tax Form (Required)
+        </a>
+        <input type="file" id="taxFile" class="file-input" accept=".pdf,application/pdf" />
+        <div class="helper-text">Ensure the NAT 3092 form is correctly filled and signed.</div>
+        <div class="selected-file" id="taxFileInfo"></div>
+      </div>
+
+      <div class="section-title">10. Main Identification</div>
+      <div class="upload-box">
+        <label class="upload-label" for="idProof">Passport or Australian Driving Licence *</label>
+        <input type="file" id="idProof" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <div class="helper-text">Supported formats: PDF, JPG, PNG, WEBP</div>
+        <div class="selected-file" id="idProofInfo"></div>
+      </div>
+
+      <div class="section-title">11. National Police Check</div>
+      <div class="upload-box">
+        <label class="upload-label" for="policeReport">
+          National Police Certificate (Police Report) *
+        </label>
+        <input type="file" id="policeReport" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <div class="helper-text">Please upload a valid National Police Clearance certificate. Supported formats: PDF, JPG, PNG, WEBP</div>
+        <div class="selected-file" id="policeReportInfo"></div>
+      </div>
+
+      <div class="section-title">12. Visa / Work Rights</div>
+      <div class="upload-box">
+        <label class="upload-label" for="visaProof">Visa Grant Notice or VEVO Check Result *</label>
+        <input type="file" id="visaProof" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <div class="helper-text">Supported formats: PDF, JPG, PNG, WEBP</div>
+        <div class="selected-file" id="visaProofInfo"></div>
+      </div>
+
+      <div class="section-title">13. Additional Identification</div>
+      <div class="upload-box">
+        <label class="upload-label" for="additionalDocs">
+          Insurance Card / Utility Bill / Bank Statement / Student ID
+        </label>
+        <input type="file" id="additionalDocs" class="file-input" accept="image/*,.pdf,application/pdf" multiple />
+        <div class="helper-text">You can select multiple files if you have more than one document. Supported formats: PDF, JPG, PNG, WEBP</div>
+        <div class="selected-file" id="additionalDocsInfo"></div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Submit Full Application</button>
 
       <div id="messageBox" tabindex="-1"></div>
-      <div class="loading" id="loader">Submitting your details, please wait...</div>
+      <div class="loading" id="loader">Submitting your details and uploading documents, please wait...</div>
     </form>
   </div>
 
@@ -331,8 +515,25 @@
     const clearSignatureBtn = document.getElementById('clearSignatureBtn');
     const signatureDataInput = document.getElementById('signatureData');
 
+    const taxFileInput = document.getElementById('taxFile');
+    const idProofInput = document.getElementById('idProof');
+    const policeReportInput = document.getElementById('policeReport');
+    const visaProofInput = document.getElementById('visaProof');
+    const additionalDocsInput = document.getElementById('additionalDocs');
+
+    const MAX_FILE_SIZE_MB = 10;
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const ALLOWED_MIME_TYPES = [
+      'application/pdf',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp'
+    ];
+    const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
+
     let signaturePad;
-    let isSubmittedSuccessfully = false;
+    let isSubmitting = false;
 
     function initSignaturePad() {
       if (signaturePad) return;
@@ -355,34 +556,21 @@
       canvas.height = height * ratio;
       canvas.getContext('2d').scale(ratio, ratio);
 
-      if (signaturePad && !isSubmittedSuccessfully) {
+      if (signaturePad && !isSubmitting) {
         signaturePad.clear();
       }
     }
 
-    initSignaturePad();
+    function showMessage(type, text) {
+      messageBox.innerHTML = `<div class="alert alert-${type}" role="alert">${text}</div>`;
+      requestAnimationFrame(() => {
+        messageBox.focus({ preventScroll: false });
+        messageBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
 
-    clearSignatureBtn.addEventListener('click', () => {
-      if (isSubmittedSuccessfully) return;
-      if (signaturePad) {
-        signaturePad.clear();
-        signatureDataInput.value = '';
-      }
-    });
-
-    function showMessage(type, text, link = null) {
-      let html = `<div class="alert alert-${type}" role="alert">${text}</div>`;
-      if (link) {
-        html = `
-          <div class="alert alert-${type}" role="alert">
-            <div>${text}</div>
-            <div style="margin-top: 8px;">
-              <a href="${link}" target="_blank" rel="noopener noreferrer" class="pdf-link">Open PDF</a> 
-            </div>
-          </div>
-        `;
-      }
-      messageBox.innerHTML = html;
+    function clearMessage() {
+      messageBox.innerHTML = '';
     }
 
     function getRadioValue(name) {
@@ -390,74 +578,123 @@
       return selected ? selected.value : '';
     }
 
-    function freezeAllFieldsExceptNext() {
-      const allInputs = form.querySelectorAll('input, textarea, select, button');
+    function getExtension(fileName) {
+      const parts = String(fileName || '').toLowerCase().split('.');
+      return parts.length > 1 ? parts.pop() : '';
+    }
 
-      allInputs.forEach((el) => {
-        if (el === submitBtn) return;
+    function formatBytes(bytes) {
+      if (!bytes && bytes !== 0) return '';
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
 
-        if (el.type === 'radio' || el.type === 'checkbox' || el.tagName === 'SELECT' || el.tagName === 'BUTTON') {
-          el.disabled = true;
-        } else {
-          el.readOnly = true;
-          el.disabled = true;
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function updateSingleFileInfo(input, infoId) {
+      const infoBox = document.getElementById(infoId);
+      const file = input.files && input.files[0];
+
+      if (!file) {
+        infoBox.innerHTML = '';
+        return;
+      }
+
+      infoBox.innerHTML = `<strong>Selected:</strong> ${escapeHtml(file.name)} (${formatBytes(file.size)})`;
+    }
+
+    function updateMultiFileInfo(input, infoId) {
+      const infoBox = document.getElementById(infoId);
+      const files = Array.from(input.files || []);
+
+      if (!files.length) {
+        infoBox.innerHTML = '';
+        return;
+      }
+
+      const lines = files.map(file => `${escapeHtml(file.name)} (${formatBytes(file.size)})`);
+      infoBox.innerHTML = `<strong>${files.length} file(s) selected:</strong><br>${lines.join('<br>')}`;
+    }
+
+    function isAllowedFile(file) {
+      const ext = getExtension(file.name);
+      const mimeOk = !file.type || ALLOWED_MIME_TYPES.includes(file.type.toLowerCase());
+      const extOk = ALLOWED_EXTENSIONS.includes(ext);
+      return mimeOk || extOk;
+    }
+
+    function validateRequiredFiles() {
+      const required = [
+        { input: taxFileInput, label: 'Tax File Number Declaration Upload' },
+        { input: idProofInput, label: 'Main Identification' },
+        { input: policeReportInput, label: 'National Police Check' },
+        { input: visaProofInput, label: 'Visa / Work Rights' }
+      ];
+
+      const missing = required.filter(item => !(item.input.files && item.input.files[0]));
+      if (missing.length) {
+        throw new Error(
+          'Please upload all required documents: ' +
+          missing.map(item => item.label).join(', ') +
+          '.'
+        );
+      }
+    }
+
+    function validateFileSet() {
+      const allFiles = [
+        ...(taxFileInput.files || []),
+        ...(idProofInput.files || []),
+        ...(policeReportInput.files || []),
+        ...(visaProofInput.files || []),
+        ...(additionalDocsInput.files || [])
+      ];
+
+      for (const file of allFiles) {
+        if (!isAllowedFile(file)) {
+          throw new Error(
+            `Unsupported file type detected: ${file.name}. Please upload PDF, JPG, JPEG, PNG, or WEBP files only.`
+          );
         }
+
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+          throw new Error(
+            `${file.name} is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB} MB per file.`
+          );
+        }
+      }
+    }
+
+    function setSubmittingState(submitting) {
+      isSubmitting = submitting;
+      submitBtn.disabled = submitting;
+      loader.style.display = submitting ? 'block' : 'none';
+      submitBtn.textContent = submitting ? 'Submitting...' : 'Submit Full Application';
+    }
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || '');
+          const commaIndex = result.indexOf(',');
+          resolve(commaIndex >= 0 ? result.slice(commaIndex + 1) : result);
+        };
+        reader.onerror = () => reject(new Error(`Failed to read file: ${file.name}`));
+        reader.readAsDataURL(file);
       });
-
-      if (clearSignatureBtn) {
-        clearSignatureBtn.disabled = true;
-      }
-
-      if (canvas) {
-        canvas.style.pointerEvents = 'none';
-        canvas.style.opacity = '0.75';
-      }
     }
 
-    function focusSuccessArea() {
-      requestAnimationFrame(() => {
-        submitBtn.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        setTimeout(() => {
-          messageBox.focus({ preventScroll: true });
-          submitBtn.focus({ preventScroll: true });
-        }, 350);
-      });
-    }
-
-    function storeVerificationContext() {
-      sessionStorage.setItem('contact_mobile_no', document.getElementById('contactMobileNo').value.trim());
-      sessionStorage.setItem('contact_email_address', document.getElementById('contactEmailAddress').value.trim());
-    }
-
-    submitBtn.addEventListener('click', () => {
-      if (isSubmittedSuccessfully) {
-        storeVerificationContext();
-        window.location.href = 'verification.html';
-      }
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      messageBox.innerHTML = '';
-
-      if (isSubmittedSuccessfully) return;
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      if (!finalConsent.checked) {
-        showMessage('warning', 'Please confirm that the information provided is correct.');
-        return;
-      }
-      if (!signaturePad || signaturePad.isEmpty()) {
-        showMessage('warning', 'Please provide your signature before submitting the form.');
-        return;
-      }
-
-      signatureDataInput.value = signaturePad.toDataURL('image/png');
-
-      const payload = {
+    function buildEmployeePayload() {
+      return {
         form_type: 'employee_information',
         surname: document.getElementById('surname').value.trim(),
         given_names: document.getElementById('givenNames').value.trim(),
@@ -501,61 +738,144 @@
         signature: signatureDataInput.value,
         submitted_at: new Date().toISOString()
       };
+    }
 
-      loader.style.display = 'block';
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
+    async function buildVerificationFields() {
+      const taxFile = taxFileInput.files[0];
+      const idFile = idProofInput.files[0];
+      const policeFile = policeReportInput.files[0];
+      const visaFile = visaProofInput.files[0];
+      const extraFiles = Array.from(additionalDocsInput.files || []);
+
+      const verificationFields = {
+        taxFileData: await toBase64(taxFile),
+        taxFileName: taxFile.name,
+        idProofData: await toBase64(idFile),
+        idProofName: idFile.name,
+        policeReportData: await toBase64(policeFile),
+        policeReportName: policeFile.name,
+        visaProofData: await toBase64(visaFile),
+        visaProofName: visaFile.name,
+        additionalFiles: []
+      };
+
+      for (const file of extraFiles) {
+        verificationFields.additionalFiles.push({
+          data: await toBase64(file),
+          name: file.name
+        });
+      }
+
+      return verificationFields;
+    }
+
+    async function parseResponse(response) {
+      const rawText = await response.text();
+      let result = {};
+
+      if (rawText) {
+        try {
+          result = JSON.parse(rawText);
+        } catch {
+          result = { message: rawText };
+        }
+      }
+
+      return { rawText, result };
+    }
+
+    initSignaturePad();
+
+    clearSignatureBtn.addEventListener('click', () => {
+      if (isSubmitting) return;
+      if (signaturePad) {
+        signaturePad.clear();
+        signatureDataInput.value = '';
+      }
+    });
+
+    taxFileInput.addEventListener('change', () => updateSingleFileInfo(taxFileInput, 'taxFileInfo'));
+    idProofInput.addEventListener('change', () => updateSingleFileInfo(idProofInput, 'idProofInfo'));
+    policeReportInput.addEventListener('change', () => updateSingleFileInfo(policeReportInput, 'policeReportInfo'));
+    visaProofInput.addEventListener('change', () => updateSingleFileInfo(visaProofInput, 'visaProofInfo'));
+    additionalDocsInput.addEventListener('change', () => updateMultiFileInfo(additionalDocsInput, 'additionalDocsInfo'));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearMessage();
+
+      if (isSubmitting) return;
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (!finalConsent.checked) {
+        showMessage('warning', 'Please confirm that the information provided is correct.');
+        return;
+      }
+
+      if (!signaturePad || signaturePad.isEmpty()) {
+        showMessage('warning', 'Please provide your signature before submitting the form.');
+        return;
+      }
+
+      if (typeof CONFIG === 'undefined' || !CONFIG || !CONFIG.WEBHOOK_URL) {
+        showMessage('danger', 'Webhook configuration is missing. Please check config.js.');
+        return;
+      }
 
       try {
+        validateRequiredFiles();
+        validateFileSet();
+
+        signatureDataInput.value = signaturePad.toDataURL('image/png');
+        setSubmittingState(true);
+
+        const employeePayload = buildEmployeePayload();
+        const verificationFields = await buildVerificationFields();
+
+        const finalPayload = {
+          ...employeePayload,
+          ...verificationFields
+        };
+
         const response = await fetch(CONFIG.WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(finalPayload)
         });
 
-        const rawText = await response.text();
-        let result = {};
-        try { result = rawText ? JSON.parse(rawText) : {}; } catch { result = {}; }
+        const { result } = await parseResponse(response);
 
-        if (!response.ok) throw new Error(result.message || 'Something went wrong while submitting.');
-
-        if (result.success) {
-          storeVerificationContext();
-          showMessage('success', '"Your details have been submitted successfully. Action Required: Please click the button below to upload your identity documents to complete the application."');
-          isSubmittedSuccessfully = true;
-          freezeAllFieldsExceptNext();
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'NEXT - GO TO DOCUMENT SUBMISSION';
-          focusSuccessArea();
-// 🔁 Auto redirect after 5 seconds
-	setTimeout(() => {
- 	window.location.href = 'verification.html';
-	}, 5000);
-
-        } else {
-          showMessage('warning', result.message || 'Unable to process your request.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit';
+        if (!response.ok) {
+          throw new Error(result.message || 'Submission failed.');
         }
+
+        if (result && typeof result.success !== 'undefined' && result.success !== true) {
+          throw new Error(result.message || 'Submission failed.');
+        }
+
+        showMessage('success', 'Your details and documents have been submitted successfully. Thank you.');
+        form.reset();
+
+        if (signaturePad) {
+          signaturePad.clear();
+        }
+
+        signatureDataInput.value = '';
+        document.getElementById('taxFileInfo').innerHTML = '';
+        document.getElementById('idProofInfo').innerHTML = '';
+        document.getElementById('policeReportInfo').innerHTML = '';
+        document.getElementById('visaProofInfo').innerHTML = '';
+        document.getElementById('additionalDocsInfo').innerHTML = '';
       } catch (error) {
         showMessage('danger', error.message || 'Submission failed. Please try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
       } finally {
-        loader.style.display = 'none';
+        setSubmittingState(false);
       }
     });
   </script>
-<div style="margin-top:8px; text-align:right;">
-<a href="verification.html" style="
-font-size:12px;
-color:#2f6fed;
-text-decoration:none;
-font-weight:500;
-">
-Go to Document Upload Page
-</a>
-</div>
-	
 </body>
 </html>
