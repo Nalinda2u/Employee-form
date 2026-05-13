@@ -1,3 +1,3 @@
 const CONFIG = {
-  WEBHOOK_URL: 'https://bot.wabybixai.com/webhook/Employee-Information',
+  WEBHOOK_URL: 'https://primary-production-0a296.up.railway.app/webhook/Employee-Information',
 };
