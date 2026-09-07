@@ -11,6 +11,111 @@
   <!-- All styling lives in style.css (premium theme) -->
 </head>
 <body>
+  <main class="app">
+
+    <!-- ============================ STEP 1 ============================ -->
+    <section id="step1" class="step" tabindex="-1" aria-labelledby="beforeStartTitle">
+      <div class="landing">
+        <header class="landing-hero">
+          <p class="hero-eyebrow">AMC Commercial Cleaning 6161</p>
+          <h1 id="beforeStartTitle" class="hero-title">Before you start your registration</h1>
+          <p class="hero-sub">Get these ready first — it'll take about 15 minutes if you have everything on hand. Scroll down for help getting your Police Check and filling in your Tax form.</p>
+        </header>
+
+        <!-- Section A — Documents checklist -->
+        <section class="landing-card">
+          <div class="card-head">
+            <span class="step-badge">1</span>
+            <h2 class="card-title">Documents you'll need to upload</h2>
+          </div>
+          <ul class="doc-list">
+            <li>
+              <span class="doc-main">Passport or Australian Driver's Licence</span>
+              <span class="req">— required</span>
+            </li>
+            <li>
+              <span class="doc-main">National Police Check — must be a <strong>Nationally Coordinated Criminal History Check (NCCHC)</strong>, not any other type</span>
+              <span class="req">— required</span>
+            </li>
+            <li>
+              <span class="doc-main">Visa Grant Notice or VEVO check result <span class="doc-note">(if you're not an Australian/NZ citizen or permanent resident)</span></span>
+              <span class="req">— required</span>
+            </li>
+            <li>
+              <span class="doc-main">A recent photo of yourself (selfie or portrait, face clearly visible)</span>
+              <span class="req">— required</span>
+              <span class="guide-wrap"><img src="photo-guideline.jpg" alt="How to take an acceptable selfie: face clearly visible, plain background, no hat or sunglasses" class="photo-guideline-img" onerror="this.style.display='none'" /></span>
+            </li>
+            <li>
+              <span class="doc-main">One more ID document — insurance card, utility bill, bank statement, or student ID</span>
+              <span class="req">— required</span>
+            </li>
+            <li>
+              <span class="doc-main">Completed &amp; signed Tax File Number (TFN) Declaration form</span>
+              <span class="req">— required</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Section B — Getting the Police Check (NCCHC) -->
+        <section class="landing-card">
+          <div class="card-head">
+            <span class="step-badge">2</span>
+            <h2 class="card-title">Don't have your Police Check yet?</h2>
+          </div>
+          <p class="card-text">We can only accept a <strong>Nationally Coordinated Criminal History Check (NCCHC)</strong> — the same check used for Working with Children sites. A standard AFP check is not accepted.</p>
+          <a class="resource-link" href="https://apps.det.wa.edu.au/crispa/apply" target="_blank" rel="noopener noreferrer">
+            <span class="resource-title">Apply for your NCCHC online</span>
+            <span class="resource-sub">apps.det.wa.edu.au/crispa/apply — WA Dept of Education Screening Unit</span>
+          </a>
+          <a class="resource-link" href="https://www.education.wa.edu.au/dl/73lq02d2" target="_blank" rel="noopener noreferrer">
+            <span class="resource-title">Crime Check Information Sheet</span>
+            <span class="resource-sub">education.wa.edu.au — official Nationally Coordinated Criminal History Check (NCCHC) information sheet</span>
+          </a>
+          <p class="note note-warning">Fee is $46 — AMC will reimburse you once you receive your certificate. Applying can take 1–2 weeks, so start this as early as possible. Need help? Call the Screening Unit on <strong>9264 4477</strong>.</p>
+        </section>
+
+        <!-- Section C — Filling in the TFN Declaration -->
+        <section class="landing-card">
+          <div class="card-head">
+            <span class="step-badge">3</span>
+            <h2 class="card-title">Filling in your Tax File Number form</h2>
+          </div>
+          <p class="card-text">You'll download this form during registration and upload it once it's signed.</p>
+          <a class="resource-link" href="TFN_declaration_form_N3092.pdf" target="_blank" rel="noopener noreferrer">
+            <span class="resource-title">Official ATO guide to the TFN Declaration</span>
+            <span class="resource-sub">Download & fill the Tax File Number Declaration form (NAT 3092)</span>
+          </a>
+          <a class="resource-link" href="https://www.youtube.com/watch?v=BgD3eveAuzw" target="_blank" rel="noopener noreferrer">
+            <span class="resource-title">▶ Video: how to complete the TFN Declaration</span>
+            <span class="resource-sub">Short walkthrough of the form</span>
+          </a>
+        </section>
+
+        <!-- Section D — Call to action -->
+        <section class="landing-card">
+          <div class="card-head">
+            <span class="step-badge">4</span>
+            <h2 class="card-title">Ready?</h2>
+          </div>
+          <p class="card-text">Once you have everything above, start your registration below.</p>
+          <button type="button" id="startRegistrationBtn" class="start-btn">Start registration</button>
+        </section>
+
+        <p class="landing-privacy">
+          Your information is collected by AMC Commercial Cleaning 6161 solely for employment onboarding and is handled confidentially.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================ STEP 2 ============================ -->
+    <section id="step2" class="step" hidden tabindex="-1" aria-label="Employee registration form">
+      <div class="form-topbar">
+        <button type="button" id="backToStartBtn" class="back-btn">
+          <span class="arrow" aria-hidden="true">&larr;</span> Before you start
+        </button>
+        <span class="step-indicator">Step 2 of 2</span>
+      </div>
   <div class="form-container">
     <form id="combinedForm" novalidate>
       <h2 class="main-title">Employee Information Form</h2>
@@ -386,12 +491,24 @@
         <div class="selected-file" id="additionalDocsInfo"></div>
       </div>
 
+      <div class="section-title">14. Photo Portrait (Selfie)</div>
+      <div class="upload-box">
+        <label class="upload-label" for="portraitPhoto">Photo Portrait (Selfie) *</label>
+        <img src="photo-guideline.jpg" alt="How to take an acceptable selfie: face clearly visible, plain background, no hat or sunglasses" class="photo-guideline-img" onerror="this.style.display='none'" />
+        <input type="file" id="portraitPhoto" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <div class="helper-text">Please upload a recent photo of yourself with your face clearly visible. Supported formats: PDF, JPG, PNG, WEBP</div>
+        <div class="selected-file" id="portraitPhotoInfo"></div>
+      </div>
+
       <button type="submit" class="btn-submit" id="submitBtn">Submit Full Application</button>
 
       <div id="messageBox" tabindex="-1"></div>
       <div class="loading" id="loader">Submitting your details and uploading documents, please wait...</div>
     </form>
   </div>
+    </section>
+
+  </main>
 
   <script src="config.js"></script>
   <script>
@@ -410,6 +527,15 @@
     const policeReportInput = document.getElementById('policeReport');
     const visaProofInput = document.getElementById('visaProof');
     const additionalDocsInput = document.getElementById('additionalDocs');
+    const portraitPhotoInput = document.getElementById('portraitPhoto');
+
+    // Step 1 -> Step 2 single-page flow
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const startRegistrationBtn = document.getElementById('startRegistrationBtn');
+    const backToStartBtn = document.getElementById('backToStartBtn');
+    const prefersReducedMotion =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const MAX_FILE_SIZE_MB = 10;
     const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -438,6 +564,15 @@
     }
 
     function resizeCanvas() {
+      // Skip while the form is off-screen: the canvas has no size then, and
+      // resizing here would blank a signature the user has already drawn.
+      if (step2.hidden || !canvas.offsetWidth || !canvas.offsetHeight) return;
+
+      // Preserve any existing signature across the resize (vector strokes, so
+      // they re-render crisply at the new dimensions).
+      const savedStrokes =
+        (signaturePad && !signaturePad.isEmpty()) ? signaturePad.toData() : null;
+
       const ratio = Math.max(window.devicePixelRatio || 1, 1);
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
@@ -446,9 +581,77 @@
       canvas.height = height * ratio;
       canvas.getContext('2d').scale(ratio, ratio);
 
-      if (signaturePad && !isSubmitting) {
+      if (signaturePad) {
         signaturePad.clear();
+        if (savedStrokes && !isSubmitting) {
+          signaturePad.fromData(savedStrokes);
+        }
       }
+    }
+
+    function goToForm() {
+      if (!step2.hidden) return; // already on the form screen
+
+      const reveal = () => {
+        if (!step2.hidden) return; // idempotent — animationend + timeout both call this
+        step1.hidden = true;
+        step1.classList.remove('step-leave');
+        step2.hidden = false;
+        // The signature canvas was 0x0 while the form was display:none.
+        // Now that it is visible, size it correctly.
+        resizeCanvas();
+        step2.classList.add('step-enter');
+        step2.addEventListener(
+          'animationend',
+          () => step2.classList.remove('step-enter'),
+          { once: true }
+        );
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        step2.focus({ preventScroll: true });
+      };
+
+      if (prefersReducedMotion) {
+        reveal();
+        return;
+      }
+
+      step1.classList.add('step-leave');
+      let done = false;
+      const once = () => { if (done) return; done = true; reveal(); };
+      step1.addEventListener('animationend', once, { once: true });
+      setTimeout(once, 400); // fallback if animationend doesn't fire
+    }
+
+    function goToStart() {
+      if (!step1.hidden) return; // already on the checklist
+
+      // Data preserved: this only toggles visibility. Form values, radio/checkbox
+      // state, selected files, and the signature all stay intact.
+      const reveal = () => {
+        if (!step1.hidden) return; // idempotent
+        step2.hidden = true;
+        step2.classList.remove('step-leave');
+        step1.hidden = false;
+        step1.classList.add('step-enter');
+        step1.addEventListener(
+          'animationend',
+          () => step1.classList.remove('step-enter'),
+          { once: true }
+        );
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        step1.focus({ preventScroll: true });
+      };
+
+      if (prefersReducedMotion) {
+        reveal();
+        return;
+      }
+
+      step2.classList.add('step-leave');
+      let done = false;
+      const once = () => { if (done) return; done = true; reveal(); };
+      step2.addEventListener('animationend', once, { once: true });
+      setTimeout(once, 400); // fallback if animationend doesn't fire
     }
 
     function showMessage(type, text) {
@@ -526,7 +729,8 @@
         { input: taxFileInput, label: 'Tax File Number Declaration Upload' },
         { input: idProofInput, label: 'Main Identification' },
         { input: policeReportInput, label: 'National Police Check' },
-        { input: visaProofInput, label: 'Visa / Work Rights' }
+        { input: visaProofInput, label: 'Visa / Work Rights' },
+        { input: portraitPhotoInput, label: 'Photo Portrait (Selfie)' }
       ];
 
       const missing = required.filter(item => !(item.input.files && item.input.files[0]));
@@ -545,6 +749,7 @@
         ...(idProofInput.files || []),
         ...(policeReportInput.files || []),
         ...(visaProofInput.files || []),
+        ...(portraitPhotoInput.files || []),
         ...(additionalDocsInput.files || [])
       ];
 
@@ -637,6 +842,7 @@
       const idFile = idProofInput.files[0];
       const policeFile = policeReportInput.files[0];
       const visaFile = visaProofInput.files[0];
+      const portraitFile = portraitPhotoInput.files[0];
       const extraFiles = Array.from(additionalDocsInput.files || []);
 
       const verificationFields = {
@@ -648,6 +854,8 @@
         policeReportName: policeFile.name,
         visaProofData: await toBase64(visaFile),
         visaProofName: visaFile.name,
+        portraitPhotoData: await toBase64(portraitFile),
+        portraitPhotoName: portraitFile.name,
         additionalFiles: []
       };
 
@@ -690,7 +898,11 @@
     idProofInput.addEventListener('change', () => updateSingleFileInfo(idProofInput, 'idProofInfo'));
     policeReportInput.addEventListener('change', () => updateSingleFileInfo(policeReportInput, 'policeReportInfo'));
     visaProofInput.addEventListener('change', () => updateSingleFileInfo(visaProofInput, 'visaProofInfo'));
+    portraitPhotoInput.addEventListener('change', () => updateSingleFileInfo(portraitPhotoInput, 'portraitPhotoInfo'));
     additionalDocsInput.addEventListener('change', () => updateMultiFileInfo(additionalDocsInput, 'additionalDocsInfo'));
+
+    startRegistrationBtn.addEventListener('click', goToForm);
+    backToStartBtn.addEventListener('click', goToStart);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -761,6 +973,7 @@
         document.getElementById('idProofInfo').innerHTML = '';
         document.getElementById('policeReportInfo').innerHTML = '';
         document.getElementById('visaProofInfo').innerHTML = '';
+        document.getElementById('portraitPhotoInfo').innerHTML = '';
         document.getElementById('additionalDocsInfo').innerHTML = '';
       } catch (error) {
         showMessage('danger', error.message || 'Submission failed. Please try again.');
