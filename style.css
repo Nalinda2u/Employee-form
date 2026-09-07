@@ -627,3 +627,353 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     transition-duration: .001ms !important;
   }
 }
+
+/* =====================================================================
+   Step 1 "Before You Start" landing + single-page (SPA) flow
+   Built from the existing token set — no new palette introduced.
+   ===================================================================== */
+
+.app { width: 100%; }
+
+/* Inactive step is fully removed from layout + a11y tree */
+[hidden] { display: none !important; }
+
+/* Smooth Step 1 -> Step 2 transition */
+.step-enter { animation: stepIn .32s ease both; }
+.step-leave { animation: stepOut .22s ease both; }
+@keyframes stepIn  { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes stepOut { from { opacity: 1; transform: none; }            to { opacity: 0; transform: translateY(-8px); } }
+#step1:focus,
+#step2:focus { outline: none; }
+
+/* ---------------------------- Landing shell ------------------------- */
+.landing { max-width: 1060px; margin: 0 auto; }
+
+.landing-hero {
+  position: relative;
+  margin-bottom: 20px;
+  /* Asymmetric: trimmer vertical height, comfortable horizontal inset */
+  padding: clamp(20px, 3vw, 30px) clamp(24px, 4vw, 40px);
+  color: #fff;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-tint) 55%, #0ea5e9);
+}
+.hero-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.hero-title {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 3.6vw, 30px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.hero-sub {
+  margin: 0;
+  max-width: 66ch;      /* keep the intro readable now the banner is full-width */
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ------------------------------ Cards ------------------------------- */
+.landing-card {
+  margin-bottom: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.step-badge {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  border-radius: 50%;
+  box-shadow: 0 4px 10px -4px rgba(79, 70, 229, .6);
+}
+.card-title {
+  margin: 0;
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.card-text {
+  margin: 0 0 16px;
+  max-width: 72ch;      /* comfortable measure inside the wider cards */
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.card-text strong { font-weight: 700; color: var(--ink); }
+
+/* ------------------------- Documents checklist ---------------------- */
+.doc-list { list-style: none; margin: 0; padding: 0; }
+.doc-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.doc-list li:first-child { padding-top: 0; }
+.doc-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.doc-list li::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.doc-main {
+  flex: 1 1 240px;
+  min-width: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.doc-main strong { font-weight: 700; }
+.doc-note { color: var(--muted); font-weight: 400; }
+.req {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--err-ink);
+}
+
+/* --------------------------- Resource links ------------------------- */
+.resource-link {
+  display: block;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  text-decoration: none;
+  background: var(--field-bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: border-color .16s ease, box-shadow .16s ease,
+              transform .16s ease, background-color .16s ease;
+}
+.resource-link:last-of-type { margin-bottom: 0; }
+.resource-link:hover,
+.resource-link:focus-visible {
+  outline: none;
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  transform: translateY(-1px);
+}
+.resource-title {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.resource-sub {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+/* ------------------------------ Note box ---------------------------- */
+.note {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  border: 1px solid transparent;
+  border-left-width: 4px;
+  border-radius: var(--radius);
+}
+.note strong { font-weight: 700; }
+.note-warning {
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+  border-left-color: var(--warn-bar);
+}
+
+/* ---------------------------- Start CTA ----------------------------- */
+.start-btn {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 16px 20px;
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  box-shadow: 0 10px 22px -10px rgba(79, 70, 229, .65);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+.start-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 30px -12px rgba(79, 70, 229, .7);
+  filter: brightness(1.05);
+}
+.start-btn:active { transform: translateY(0); }
+
+/* ------------------------- Privacy footnote ------------------------- */
+.landing-privacy {
+  max-width: 640px;
+  margin: 8px auto 0;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------- Landing responsive ----------------------- */
+@media (max-width: 620px) {
+  .landing-hero { border-radius: 16px; }
+  .landing-card { border-radius: 14px; }
+  .req { margin-left: 20px; }  /* aligns wrapped tag under the checklist text */
+}
+
+/* -------------------- Step 2 back-navigation bar -------------------- */
+/* Sticky so users can return to the checklist from anywhere in the form.
+   Returning preserves all entered data — it only toggles step visibility. */
+.form-topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  max-width: 1060px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px -10px rgba(15, 23, 42, 0.30);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease,
+              background-color .15s ease, transform .1s ease;
+}
+.back-btn:hover,
+.back-btn:focus-visible {
+  outline: none;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.back-btn:active { transform: translateY(1px); }
+.back-btn .arrow {
+  font-size: 15px;
+  line-height: 1;
+  transition: transform .15s ease;
+}
+.back-btn:hover .arrow { transform: translateX(-2px); }
+
+.step-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-right: 4px;
+}
+
+@media (max-width: 620px) {
+  .form-topbar { top: 8px; padding: 7px 8px; }
+  .back-btn { padding: 8px 12px; }
+  .step-indicator { font-size: 11px; }
+}
+
+/* --------------------- Photo guideline reference -------------------- */
+/* Shown in the Step 1 checklist and in Item 14. Placeholder src
+   (photo-guideline.jpg) — hidden via onerror until the asset is added. */
+.photo-guideline-img {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px -8px rgba(15, 23, 42, 0.25);
+}
+
+/* Inside the upload box: sits between the label and the file input */
+.upload-box .photo-guideline-img {
+  margin: 0 0 14px;
+}
+
+/* Inside the Step 1 checklist row: the wrapper takes a full line (so the image
+   drops below the item text), and the image is capped inside it */
+.doc-list .guide-wrap {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  padding-left: 20px;      /* align under the item text, without overflow */
+  margin: 12px 0 2px;
+}
+.doc-list .photo-guideline-img {
+  max-width: 300px;
+}
+
+@media (max-width: 620px) {
+  .doc-list .photo-guideline-img { max-width: 100%; }
+  .photo-guideline-img { max-width: 100%; }
+}
