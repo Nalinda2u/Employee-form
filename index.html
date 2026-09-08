@@ -494,7 +494,16 @@
       <div class="section-title">14. Photo Portrait (Selfie)</div>
       <div class="upload-box">
         <label class="upload-label" for="portraitPhoto">Photo Portrait (Selfie) *</label>
-        <img src="photo-guideline.jpg" alt="How to take an acceptable selfie: face clearly visible, plain background, no hat or sunglasses" class="photo-guideline-img" onerror="this.style.display='none'" />
+        <div class="photo-guide-row">
+          <figure class="photo-guide-item">
+            <img src="photo-guideline.jpg" alt="How to take an acceptable selfie: face clearly visible, plain background, no hat or sunglasses" class="photo-guideline-img" onerror="this.closest('.photo-guide-item').style.display='none'" />
+            <figcaption class="photo-cap">Example</figcaption>
+          </figure>
+          <figure class="photo-preview" id="portraitPreview" hidden>
+            <img id="portraitPreviewImg" class="photo-preview-img" alt="Preview of your uploaded photo" />
+            <figcaption class="photo-cap photo-cap-you">Your photo</figcaption>
+          </figure>
+        </div>
         <input type="file" id="portraitPhoto" class="file-input" accept="image/*,.pdf,application/pdf" />
         <div class="helper-text">Please upload a recent photo of yourself with your face clearly visible. Supported formats: PDF, JPG, PNG, WEBP</div>
         <div class="selected-file" id="portraitPhotoInfo"></div>
@@ -898,7 +907,38 @@
     idProofInput.addEventListener('change', () => updateSingleFileInfo(idProofInput, 'idProofInfo'));
     policeReportInput.addEventListener('change', () => updateSingleFileInfo(policeReportInput, 'policeReportInfo'));
     visaProofInput.addEventListener('change', () => updateSingleFileInfo(visaProofInput, 'visaProofInfo'));
-    portraitPhotoInput.addEventListener('change', () => updateSingleFileInfo(portraitPhotoInput, 'portraitPhotoInfo'));
+    // --- Item 14 selfie live preview ---
+    const portraitPreview = document.getElementById('portraitPreview');
+    const portraitPreviewImg = document.getElementById('portraitPreviewImg');
+    let portraitPreviewUrl = null;
+
+    function clearPortraitPreview() {
+      if (portraitPreviewUrl) {
+        URL.revokeObjectURL(portraitPreviewUrl); // free the blob URL
+        portraitPreviewUrl = null;
+      }
+      portraitPreviewImg.removeAttribute('src');
+      portraitPreview.hidden = true;
+    }
+
+    function updatePortraitPreview() {
+      const file = portraitPhotoInput.files && portraitPhotoInput.files[0];
+      // Only images can be previewed; a PDF (also allowed) just hides the box —
+      // its filename still shows in the info line below.
+      if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+        clearPortraitPreview();
+        return;
+      }
+      if (portraitPreviewUrl) URL.revokeObjectURL(portraitPreviewUrl);
+      portraitPreviewUrl = URL.createObjectURL(file);
+      portraitPreviewImg.src = portraitPreviewUrl;
+      portraitPreview.hidden = false;
+    }
+
+    portraitPhotoInput.addEventListener('change', () => {
+      updateSingleFileInfo(portraitPhotoInput, 'portraitPhotoInfo');
+      updatePortraitPreview();
+    });
     additionalDocsInput.addEventListener('change', () => updateMultiFileInfo(additionalDocsInput, 'additionalDocsInfo'));
 
     startRegistrationBtn.addEventListener('click', goToForm);
@@ -975,6 +1015,7 @@
         document.getElementById('visaProofInfo').innerHTML = '';
         document.getElementById('portraitPhotoInfo').innerHTML = '';
         document.getElementById('additionalDocsInfo').innerHTML = '';
+        clearPortraitPreview();
       } catch (error) {
         showMessage('danger', error.message || 'Submission failed. Please try again.');
       } finally {
