@@ -977,3 +977,49 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
   .doc-list .photo-guideline-img { max-width: 100%; }
   .photo-guideline-img { max-width: 100%; }
 }
+
+/* ---------------- Item 14: guideline + live selfie preview ---------- */
+.photo-guide-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0 0 14px;
+}
+.photo-guide-item,
+.photo-preview {
+  flex: 1 1 200px;      /* side-by-side on wide screens; wrap/stack when tight */
+  max-width: 320px;
+  min-width: 0;
+  margin: 0;
+}
+.photo-guide-row .photo-guideline-img,
+.photo-preview-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px -8px rgba(15, 23, 42, 0.25);
+}
+.photo-preview-img {
+  border-color: var(--accent);   /* distinguish the user's own photo */
+  background: var(--field-bg);
+}
+.photo-cap {
+  margin-top: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.photo-cap-you { color: var(--accent); }
+
+@media (max-width: 620px) {
+  /* Stack the preview under the guideline, each full width */
+  .photo-guide-item,
+  .photo-preview { flex-basis: 100%; max-width: 100%; }
+}
