@@ -1023,3 +1023,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
   .photo-guide-item,
   .photo-preview { flex-basis: 100%; max-width: 100%; }
 }
+
+/* Section 9: emphasise the "fill & sign correctly" warning in red + bold */
+.helper-text-danger {
+  color: #dc2626;
+  font-weight: 700;
+}
