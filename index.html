@@ -1030,6 +1030,13 @@
         document.getElementById('portraitPhotoInfo').innerHTML = '';
         document.getElementById('additionalDocsInfo').innerHTML = '';
         clearPortraitPreview();
+
+        // Keep the success message visible for 5 seconds, then reload back to
+        // the initial state (Step 1 landing, scrolled to top) with a fresh form.
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+          window.location.reload();
+        }, 5000);
       } catch (error) {
         showMessage('danger', error.message || 'Submission failed. Please try again.');
       } finally {
