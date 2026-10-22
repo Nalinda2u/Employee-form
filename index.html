@@ -461,7 +461,7 @@
         >
            📥 Download & Fill Tax Form (Required)
         </a>
-        <input type="file" id="taxFile" class="file-input" accept=".pdf,application/pdf" />
+        <input type="file" id="taxFile" class="file-input" accept=".pdf,application/pdf" required />
         <div class="helper-text helper-text-danger">Ensure the NAT 3092 form is correctly filled and signed.</div>
         <div class="selected-file" id="taxFileInfo"></div>
       </div>
@@ -469,7 +469,7 @@
       <div class="section-title">10. Main Identification</div>
       <div class="upload-box">
         <label class="upload-label" for="idProof">Passport or Australian Driving Licence *</label>
-        <input type="file" id="idProof" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <input type="file" id="idProof" class="file-input" accept="image/*,.pdf,application/pdf" required />
         <div class="helper-text">Supported formats: PDF, JPG, PNG, WEBP</div>
         <div class="selected-file" id="idProofInfo"></div>
       </div>
@@ -479,7 +479,7 @@
         <label class="upload-label" for="policeReport">
           National Coordinated Crime Check Report *
         </label>
-        <input type="file" id="policeReport" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <input type="file" id="policeReport" class="file-input" accept="image/*,.pdf,application/pdf" required />
         <div class="helper-text">Please upload a valid National Police Clearance certificate. Supported formats: PDF, JPG, PNG, WEBP</div>
         <div style="background: #f5f6ff; border: 1px solid #e0e7ff; border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 13px; line-height: 1.5; font-weight: 700; color: var(--ink-soft);">👉 Don't have this check yet? Apply online here: <a href="https://apps.det.wa.edu.au/crispa/apply" target="_blank" rel="noopener noreferrer" style="color: var(--accent); font-weight: 700;">apps.det.wa.edu.au/crispa/apply</a></div>
         <div class="selected-file" id="policeReportInfo"></div>
@@ -488,7 +488,7 @@
       <div class="section-title">12. Visa / Work Rights</div>
       <div class="upload-box">
         <label class="upload-label" for="visaProof">Visa Grant Notice or VEVO Check Result *</label>
-        <input type="file" id="visaProof" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <input type="file" id="visaProof" class="file-input" accept="image/*,.pdf,application/pdf" required />
         <div class="helper-text">Supported formats: PDF, JPG, PNG, WEBP</div>
         <div class="selected-file" id="visaProofInfo"></div>
       </div>
@@ -498,7 +498,7 @@
         <label class="upload-label" for="additionalDocs">
           Insurance Card / Utility Bill / Bank Statement / Student ID
         </label>
-        <input type="file" id="additionalDocs" class="file-input" accept="image/*,.pdf,application/pdf" multiple />
+        <input type="file" id="additionalDocs" class="file-input" accept="image/*,.pdf,application/pdf" multiple required />
         <div class="helper-text">You can select multiple files if you have more than one document. Supported formats: PDF, JPG, PNG, WEBP</div>
         <div class="selected-file" id="additionalDocsInfo"></div>
       </div>
@@ -516,7 +516,7 @@
             <figcaption class="photo-cap photo-cap-you">Your photo</figcaption>
           </figure>
         </div>
-        <input type="file" id="portraitPhoto" class="file-input" accept="image/*,.pdf,application/pdf" />
+        <input type="file" id="portraitPhoto" class="file-input" accept="image/*,.pdf,application/pdf" required />
         <div class="helper-text">Please upload a recent photo of yourself with your face clearly visible. Supported formats: PDF, JPG, PNG, WEBP</div>
         <div class="selected-file" id="portraitPhotoInfo"></div>
       </div>
@@ -676,7 +676,14 @@
     }
 
     function showMessage(type, text) {
-      messageBox.innerHTML = `<div class="alert alert-${type}" role="alert">${text}</div>`;
+      // Build the alert via DOM and set the message with textContent so no
+      // server-provided or dynamic string is ever rendered as HTML.
+      messageBox.innerHTML = '';
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-' + type;
+      alert.setAttribute('role', 'alert');
+      alert.textContent = text;
+      messageBox.appendChild(alert);
       requestAnimationFrame(() => {
         messageBox.focus({ preventScroll: false });
         messageBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -958,6 +965,102 @@
     startRegistrationBtn.addEventListener('click', goToForm);
     backToStartBtn.addEventListener('click', goToStart);
 
+    // ---------------------------------------------------------------
+    // Submission reliability: request timeout, bounded retry for
+    // transient failures, friendly error mapping, a per-session
+    // idempotency key, and a combined payload-size guard.
+    // Additive only — no existing field names, IDs, styles, Step 1/2
+    // flow, signature mechanics, validation, or success reload changed.
+    // ---------------------------------------------------------------
+    const SUBMIT_TIMEOUT_MS = 75000;         // abort a single attempt after ~75s
+    const MAX_RETRIES = 2;                    // up to 2 retries (3 attempts total)
+    const RETRY_BACKOFF_MS = [2000, 4000];    // wait before retry 1, then retry 2
+    const MAX_TOTAL_FILE_MB = 15;             // combined raw file-size guard
+    const MAX_TOTAL_FILE_BYTES = MAX_TOTAL_FILE_MB * 1024 * 1024;
+
+    function generateSubmissionId() {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+      }
+      // RFC-4122 v4 fallback for older browsers
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+
+    // One id per page/session. A successful submit reloads the page, so the
+    // next applicant naturally gets a fresh id; auto-retries of the SAME
+    // submission reuse this id so the webhook can ignore duplicates.
+    const SUBMISSION_ID = generateSubmissionId();
+
+    function getTotalSelectedBytes() {
+      let total = 0;
+      [taxFileInput, idProofInput, policeReportInput, visaProofInput, portraitPhotoInput].forEach(function (inp) {
+        if (inp && inp.files && inp.files[0]) total += inp.files[0].size;
+      });
+      Array.from(additionalDocsInput.files || []).forEach(function (f) { total += f.size; });
+      return total;
+    }
+
+    function friendlyErrorForStatus(status) {
+      if (status === 413) {
+        return 'Your documents are too large to upload together. Please use smaller or fewer files and submit again.';
+      }
+      if (status === 400 || status === 422) {
+        return 'Some of the information provided could not be processed. Please review your entries and try again.';
+      }
+      if (status === 500 || status === 502 || status === 503 || status === 504) {
+        return 'We are experiencing a temporary issue on our end. Please wait a moment and submit again.';
+      }
+      return 'Something went wrong while submitting your application. Please try again.';
+    }
+
+    function isTransientStatus(status) {
+      return status === 502 || status === 503 || status === 504;
+    }
+
+    function wait(ms) {
+      return new Promise(function (resolve) { setTimeout(resolve, ms); });
+    }
+
+    // A single POST attempt with a hard timeout via AbortController.
+    async function postOnce(payloadStr) {
+      const controller = new AbortController();
+      const timer = setTimeout(function () { controller.abort(); }, SUBMIT_TIMEOUT_MS);
+      try {
+        return await fetch(CONFIG.WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payloadStr,
+          signal: controller.signal
+        });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    // Retries ONLY transient failures (network drop, timeout/abort, 502/503/504).
+    // Deterministic errors (400/413/500/etc.) return immediately for handling.
+    async function postWithRetry(payloadStr) {
+      for (let attempt = 0; ; attempt++) {
+        let response;
+        try {
+          response = await postOnce(payloadStr);
+        } catch (err) {
+          // network error or timeout (AbortError) — transient
+          if (attempt < MAX_RETRIES) { await wait(RETRY_BACKOFF_MS[attempt]); continue; }
+          throw new Error('We could not reach the server. Please check your internet connection and try again.');
+        }
+        if (isTransientStatus(response.status) && attempt < MAX_RETRIES) {
+          await wait(RETRY_BACKOFF_MS[attempt]);
+          continue;
+        }
+        return response;
+      }
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearMessage();
@@ -984,6 +1087,13 @@
         return;
       }
 
+      // Proactively avoid a server 413 by checking combined file size first.
+      const totalFileBytes = getTotalSelectedBytes();
+      if (totalFileBytes > MAX_TOTAL_FILE_BYTES) {
+        showMessage('warning', 'Your selected documents add up to ' + formatBytes(totalFileBytes) + ', which is over the ' + MAX_TOTAL_FILE_MB + ' MB limit for one submission. Please use smaller or fewer files and try again.');
+        return;
+      }
+
       try {
         validateRequiredFiles();
         validateFileSet();
@@ -995,24 +1105,27 @@
         const verificationFields = await buildVerificationFields();
 
         const finalPayload = {
+          submission_id: SUBMISSION_ID,
           ...employeePayload,
           ...verificationFields
         };
 
-        const response = await fetch(CONFIG.WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(finalPayload)
-        });
+        // Encode once; reuse the same body across any retries so the
+        // idempotency key and base64 files are identical each attempt.
+        const payloadStr = JSON.stringify(finalPayload);
+        const response = await postWithRetry(payloadStr);
 
         const { result } = await parseResponse(response);
 
         if (!response.ok) {
-          throw new Error(result.message || 'Submission failed.');
+          // Log the real details for debugging; never show them to the user.
+          console.error('Submission HTTP error', response.status, result && result.message);
+          throw new Error(friendlyErrorForStatus(response.status));
         }
 
         if (result && typeof result.success !== 'undefined' && result.success !== true) {
-          throw new Error(result.message || 'Submission failed.');
+          console.error('Submission rejected by server:', result && result.message);
+          throw new Error('Your application could not be submitted. Please try again.');
         }
 
         showMessage('success', 'Your details and documents have been submitted successfully. Thank you.');
