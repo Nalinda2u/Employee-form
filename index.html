@@ -8,7 +8,119 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
-  <!-- All styling lives in style.css (premium theme) -->
+  <!-- Base styling lives in style.css (premium theme) -->
+
+  <!-- Submission status modal (self-contained; uses style.css tokens with fallbacks) -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.62);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.is-open { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface, #ffffff);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.45);
+      padding: 32px 28px 26px;
+      text-align: center;
+      font-family: var(--font, 'Inter', -apple-system, 'Segoe UI', Arial, sans-serif);
+      animation: modalPop 0.22s ease both;
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .modal-icon {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Processing spinner */
+    .modal-spinner {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 18px;
+      border: 5px solid var(--accent-soft, rgba(79, 70, 229, 0.15));
+      border-top-color: var(--accent, #4f46e5);
+      border-radius: 50%;
+      animation: modalSpin 0.75s linear infinite;
+    }
+    @keyframes modalSpin { to { transform: rotate(360deg); } }
+
+    /* Success icon (green circle + checkmark) */
+    .modal-icon.is-success { background: #ecfdf5; }
+    .modal-icon.is-success svg { width: 38px; height: 38px; stroke: var(--ok-bar, #10b981); }
+    /* Error icon (red circle + alert) */
+    .modal-icon.is-error { background: #fef2f2; }
+    .modal-icon.is-error svg { width: 38px; height: 38px; stroke: #ef4444; }
+
+    .modal-title {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--ink, #0f172a);
+    }
+    .modal-message {
+      margin: 0 0 22px;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--muted, #64748b);
+    }
+
+    .modal-actions { display: flex; justify-content: center; }
+    .modal-btn {
+      min-width: 160px;
+      padding: 13px 22px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      border: 0;
+      border-radius: var(--radius, 12px);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+    .modal-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .modal-btn:active { transform: translateY(0); }
+    .modal-btn-success {
+      background: linear-gradient(180deg, #10b981, #059669);
+      box-shadow: 0 10px 22px -10px rgba(16, 185, 129, 0.7);
+    }
+    .modal-btn-error {
+      background: linear-gradient(180deg, var(--accent, #4f46e5), var(--accent-strong, #4338ca));
+      box-shadow: 0 10px 22px -10px rgba(79, 70, 229, 0.65);
+    }
+    .modal-btn:focus-visible { outline: 2px solid var(--accent, #4f46e5); outline-offset: 2px; }
+
+    /* Lock background scroll while a modal is open */
+    body.modal-open { overflow: hidden; }
+
+    @media (max-width: 480px) {
+      .modal-card { padding: 26px 20px 22px; }
+      .modal-btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .modal-card { animation: none; }
+      .modal-spinner { animation-duration: 1.4s; }
+    }
+  </style>
 </head>
 <body>
   <main class="app">
@@ -524,18 +636,37 @@
       <button type="submit" class="btn-submit" id="submitBtn">Submit Full Application</button>
 
       <div id="messageBox" tabindex="-1"></div>
-      <div class="loading" id="loader">Submitting your details and uploading documents, please wait...</div>
     </form>
   </div>
     </section>
 
   </main>
 
+  <!-- ===================== Submission status modal ===================== -->
+  <div id="statusModal" class="modal-overlay" role="dialog" aria-modal="true"
+       aria-labelledby="statusModalTitle" aria-describedby="statusModalMessage" hidden>
+    <div class="modal-card" role="document">
+      <!-- Processing: spinner -->
+      <div id="statusModalSpinner" class="modal-spinner" aria-hidden="true"></div>
+
+      <!-- Success / Error: icon swapped in here -->
+      <div id="statusModalIcon" class="modal-icon" aria-hidden="true" hidden></div>
+
+      <h2 id="statusModalTitle" class="modal-title">Submitting your application…</h2>
+      <p id="statusModalMessage" class="modal-message">
+        Please wait while your details and documents are uploaded. This can take up to a minute — please don't close or refresh this page.
+      </p>
+
+      <div id="statusModalActions" class="modal-actions" hidden>
+        <button type="button" id="statusModalBtn" class="modal-btn modal-btn-error">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script src="config.js"></script>
   <script>
     const form = document.getElementById('combinedForm');
     const messageBox = document.getElementById('messageBox');
-    const loader = document.getElementById('loader');
     const submitBtn = document.getElementById('submitBtn');
     const finalConsent = document.getElementById('finalConsent');
 
@@ -797,11 +928,117 @@
     }
 
     function setSubmittingState(submitting) {
+      // Keep the button's disabled state (prevents double-clicks). All progress,
+      // success and error feedback now lives exclusively in the status modal —
+      // the old inline "Submitting…" loader has been removed.
       isSubmitting = submitting;
       submitBtn.disabled = submitting;
-      loader.style.display = submitting ? 'block' : 'none';
       submitBtn.textContent = submitting ? 'Submitting...' : 'Submit Full Application';
     }
+
+    // ----------------------- Submission status modal -----------------------
+    // Blocking, centered dialog with three states: processing (locked),
+    // success (Done -> reset + reload), error (Close & Review -> dismiss only,
+    // all inputs/files/signature preserved). Replaces the old bottom alerts.
+    const statusModal        = document.getElementById('statusModal');
+    const statusModalSpinner = document.getElementById('statusModalSpinner');
+    const statusModalIcon    = document.getElementById('statusModalIcon');
+    const statusModalTitle   = document.getElementById('statusModalTitle');
+    const statusModalMessage = document.getElementById('statusModalMessage');
+    const statusModalActions = document.getElementById('statusModalActions');
+    const statusModalBtn     = document.getElementById('statusModalBtn');
+
+    let modalMode = null;        // 'processing' | 'success' | 'error' | null
+    let modalLastFocus = null;
+
+    const MODAL_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    const MODAL_ALERT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.29 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.29a2 2 0 0 0-3.42 0z"/></svg>';
+
+    function openModal() {
+      if (!statusModal.classList.contains('is-open')) {
+        modalLastFocus = document.activeElement;
+      }
+      statusModal.hidden = false;
+      statusModal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+    }
+    function closeModal() {
+      statusModal.classList.remove('is-open');
+      statusModal.hidden = true;
+      document.body.classList.remove('modal-open');
+      modalMode = null;
+      if (modalLastFocus && typeof modalLastFocus.focus === 'function') {
+        try { modalLastFocus.focus(); } catch (e) {}
+      }
+    }
+
+    function openModalProcessing() {
+      modalMode = 'processing';
+      statusModalSpinner.hidden = false;
+      statusModalIcon.hidden = true;
+      statusModalIcon.className = 'modal-icon';
+      statusModalIcon.innerHTML = '';
+      statusModalTitle.textContent = 'Submitting your application…';
+      statusModalMessage.textContent = 'Please wait while your details and documents are uploaded. This can take up to a minute — please don’t close or refresh this page.';
+      statusModalActions.hidden = true;   // strictly locked: no button, no dismiss
+      openModal();
+    }
+
+    function showModalSuccess(message) {
+      modalMode = 'success';
+      statusModalSpinner.hidden = true;
+      statusModalIcon.hidden = false;
+      statusModalIcon.className = 'modal-icon is-success';
+      statusModalIcon.innerHTML = MODAL_CHECK_SVG;
+      statusModalTitle.textContent = 'Submission successful';
+      statusModalMessage.textContent = message;
+      statusModalBtn.textContent = 'Done';
+      statusModalBtn.className = 'modal-btn modal-btn-success';
+      statusModalActions.hidden = false;
+      openModal();
+      requestAnimationFrame(function () { statusModalBtn.focus(); });
+    }
+
+    function showModalError(message) {
+      modalMode = 'error';
+      statusModalSpinner.hidden = true;
+      statusModalIcon.hidden = false;
+      statusModalIcon.className = 'modal-icon is-error';
+      statusModalIcon.innerHTML = MODAL_ALERT_SVG;
+      statusModalTitle.textContent = 'Submission not completed';
+      statusModalMessage.textContent = message;
+      statusModalBtn.textContent = 'Close & Review';
+      statusModalBtn.className = 'modal-btn modal-btn-error';
+      statusModalActions.hidden = false;
+      openModal();
+      requestAnimationFrame(function () { statusModalBtn.focus(); });
+    }
+
+    // The single modal button. Success -> user-confirmed reset + reload.
+    // Error -> dismiss only; the form, files and signature stay exactly as-is.
+    statusModalBtn.addEventListener('click', function () {
+      if (modalMode === 'success') {
+        window.scrollTo(0, 0);
+        window.location.reload();
+      } else {
+        closeModal();
+      }
+    });
+
+    // Backdrop click dismisses ONLY in the error state. Processing and success
+    // are locked to their intended action (no accidental dismissal).
+    statusModal.addEventListener('click', function (e) {
+      if (e.target === statusModal && modalMode === 'error') {
+        closeModal();
+      }
+    });
+
+    // Escape dismisses ONLY in the error state. Processing/success ignore it.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && statusModal.classList.contains('is-open') && modalMode === 'error') {
+        closeModal();
+      }
+    });
 
     function toBase64(file) {
       return new Promise((resolve, reject) => {
@@ -1073,24 +1310,25 @@
       }
 
       if (!finalConsent.checked) {
-        showMessage('warning', 'Please confirm that the information provided is correct.');
+        showModalError('Please confirm that the information provided is correct before submitting.');
         return;
       }
 
       if (!signaturePad || signaturePad.isEmpty()) {
-        showMessage('warning', 'Please provide your signature before submitting the form.');
+        showModalError('Please provide your signature before submitting the form.');
         return;
       }
 
       if (typeof CONFIG === 'undefined' || !CONFIG || !CONFIG.WEBHOOK_URL) {
-        showMessage('danger', 'Webhook configuration is missing. Please check config.js.');
+        showModalError('We are unable to submit right now due to a configuration problem. Please contact AMC.');
+        console.error('Webhook configuration is missing. Please check config.js.');
         return;
       }
 
       // Proactively avoid a server 413 by checking combined file size first.
       const totalFileBytes = getTotalSelectedBytes();
       if (totalFileBytes > MAX_TOTAL_FILE_BYTES) {
-        showMessage('warning', 'Your selected documents add up to ' + formatBytes(totalFileBytes) + ', which is over the ' + MAX_TOTAL_FILE_MB + ' MB limit for one submission. Please use smaller or fewer files and try again.');
+        showModalError('Your selected documents add up to ' + formatBytes(totalFileBytes) + ', which is over the ' + MAX_TOTAL_FILE_MB + ' MB limit for one submission. Please use smaller or fewer files and try again.');
         return;
       }
 
@@ -1100,6 +1338,7 @@
 
         signatureDataInput.value = signaturePad.toDataURL('image/png');
         setSubmittingState(true);
+        openModalProcessing();   // locked, centered spinner over a darkened backdrop
 
         const employeePayload = buildEmployeePayload();
         const verificationFields = await buildVerificationFields();
@@ -1123,35 +1362,35 @@
           throw new Error(friendlyErrorForStatus(response.status));
         }
 
-        if (result && typeof result.success !== 'undefined' && result.success !== true) {
-          console.error('Submission rejected by server:', result && result.message);
-          throw new Error('Your application could not be submitted. Please try again.');
+        // STRICT success verification: a completed submission MUST positively
+        // confirm success === true. A 200 response with a missing, empty, or
+        // partial body — e.g. the workflow crashed mid-run before the success
+        // responder executed — is treated as a FAILURE, never a success. This
+        // is fail-safe: anything short of an explicit success is an error, so
+        // the success screen / reset / reload below can never fire by default.
+        if (!result || result.success !== true) {
+          console.error('Submission not positively confirmed. Status', response.status, 'body:', result);
+          // Distinguish a known, structured duplicate rejection from an
+          // unconfirmed/failed submission — but always use our OWN wording,
+          // never the server's text, so no raw server output can ever reach
+          // the screen. We only trust the structured boolean `duplicate` flag.
+          const isDuplicate = !!(result && result.duplicate === true);
+          throw new Error(
+            isDuplicate
+              ? 'This phone number is already registered in our records. If you believe this is a mistake, please contact AMC before resubmitting.'
+              : 'We could not confirm your submission was completed. Please try again. If this keeps happening, please contact us before resubmitting.'
+          );
         }
 
-        showMessage('success', 'Your details and documents have been submitted successfully. Thank you.');
-        form.reset();
-
-        if (signaturePad) {
-          signaturePad.clear();
-        }
-
-        signatureDataInput.value = '';
-        document.getElementById('taxFileInfo').innerHTML = '';
-        document.getElementById('idProofInfo').innerHTML = '';
-        document.getElementById('policeReportInfo').innerHTML = '';
-        document.getElementById('visaProofInfo').innerHTML = '';
-        document.getElementById('portraitPhotoInfo').innerHTML = '';
-        document.getElementById('additionalDocsInfo').innerHTML = '';
-        clearPortraitPreview();
-
-        // Keep the success message visible for 5 seconds, then reload back to
-        // the initial state (Step 1 landing, scrolled to top) with a fresh form.
-        setTimeout(function () {
-          window.scrollTo(0, 0);
-          window.location.reload();
-        }, 5000);
+        // Confirmed success. Show the success modal and wait for the user to
+        // click "Done" — the form reset + page reload happen ONLY then (in the
+        // modal button handler), never on an automatic timer.
+        showModalSuccess('Thank you. Your details and documents have been submitted successfully. You may now close this window.');
       } catch (error) {
-        showMessage('danger', error.message || 'Submission failed. Please try again.');
+        // Any failure/timeout/unconfirmed response: show the error modal.
+        // The form, files and signature are left untouched so the applicant
+        // can review and re-attempt after clicking "Close & Review".
+        showModalError(error.message || 'We could not complete your submission. Please try again.');
       } finally {
         setSubmittingState(false);
       }
