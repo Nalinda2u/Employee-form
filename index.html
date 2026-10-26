@@ -1203,6 +1203,52 @@
     backToStartBtn.addEventListener('click', goToStart);
 
     // ---------------------------------------------------------------
+    // Working Rights (Section 7) conditional requirement.
+    // The form itself says: if YES to Q1 (PR/Citizen of AU/NZ), go directly to
+    // Q6. So the whole working-rights/visa block is required ONLY when the
+    // applicant is NOT a PR/citizen — citizens are no longer forced to invent
+    // visa details or a fake visa-expiry date. Restriction details are required
+    // only when hours are actually restricted. Additive: no field names, IDs,
+    // styling or layout changed — only the `required` attribute is toggled.
+    // ---------------------------------------------------------------
+    const residentRadios      = document.querySelectorAll('input[name="residentCitizen"]');
+    const allowedWorkRadios   = document.querySelectorAll('input[name="allowedToWork"]');
+    const restrictedRadios    = document.querySelectorAll('input[name="restrictedHours"]');
+    const currentVisaInput    = document.getElementById('currentVisa');
+    const visaClassInput      = document.getElementById('visaClass');
+    const visaSubClassInput   = document.getElementById('visaSubClass');
+    const visaExpiryInput     = document.getElementById('visaExpiryDate');
+    const restrictionDetailsField = document.getElementById('restrictionDetails');
+
+    function setRequired(el, req) {
+      if (!el) return;
+      if (req) el.setAttribute('required', '');
+      else el.removeAttribute('required');
+    }
+    function setGroupRequired(nodeList, req) {
+      nodeList.forEach(function (el) { setRequired(el, req); });
+    }
+
+    function updateWorkingRightsRequirement() {
+      // Required only when the applicant is NOT a PR/Citizen (Q1 = NO / unset).
+      const need = getRadioValue('residentCitizen') !== 'YES';
+
+      setGroupRequired(allowedWorkRadios, need);
+      setGroupRequired(restrictedRadios, need);
+      [currentVisaInput, visaClassInput, visaSubClassInput, visaExpiryInput]
+        .forEach(function (el) { setRequired(el, need); });
+
+      // "If yes, what is the restriction" — only meaningful when hours are
+      // restricted AND the working-rights block applies.
+      const restricted = getRadioValue('restrictedHours') === 'YES';
+      setRequired(restrictionDetailsField, need && restricted);
+    }
+
+    residentRadios.forEach(function (r) { r.addEventListener('change', updateWorkingRightsRequirement); });
+    restrictedRadios.forEach(function (r) { r.addEventListener('change', updateWorkingRightsRequirement); });
+    updateWorkingRightsRequirement(); // set correct initial state on load
+
+    // ---------------------------------------------------------------
     // Submission reliability: request timeout, bounded retry for
     // transient failures, friendly error mapping, a per-session
     // idempotency key, and a combined payload-size guard.
