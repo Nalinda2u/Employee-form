@@ -1212,7 +1212,7 @@
     const SUBMIT_TIMEOUT_MS = 75000;         // abort a single attempt after ~75s
     const MAX_RETRIES = 2;                    // up to 2 retries (3 attempts total)
     const RETRY_BACKOFF_MS = [2000, 4000];    // wait before retry 1, then retry 2
-    const MAX_TOTAL_FILE_MB = 15;             // combined raw file-size guard
+    const MAX_TOTAL_FILE_MB = 11;             // combined raw file-size guard (base64 ~+33% stays < n8n 16 MB limit)
     const MAX_TOTAL_FILE_BYTES = MAX_TOTAL_FILE_MB * 1024 * 1024;
 
     function generateSubmissionId() {
